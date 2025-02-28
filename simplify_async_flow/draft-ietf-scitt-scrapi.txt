@@ -151,7 +151,7 @@ Table of Contents
 
    This specification uses the terms "Signed Statement", "Receipt",
    "Transparent Statement", "Artifact Repositories", "Transparency
-   Service", "Append-Only Log" and "Registration Policy" as defined in
+   Service" and "Registration Policy" as defined in
    [I-D.draft-ietf-scitt-architecture].
 
    This specification uses "payload" as defined in [RFC9052].
