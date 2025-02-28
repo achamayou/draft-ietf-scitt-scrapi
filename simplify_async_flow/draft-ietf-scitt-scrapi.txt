@@ -348,6 +348,9 @@ Table of Contents
    The location MAY be temporary, and the service may not serve a
    relevant response at this Location after a reasonable delay.
 
+   The Transparency Service MAY include a Retry-After header in the HTTP
+   response to help with polling.
+
 2.1.3.  Query Registration Status
 
    This endpoint lets a client query a Transparency Service for the
@@ -369,8 +372,7 @@ Table of Contents
 2.1.3.1.  Status 302 - Registration is running
 
    Registration requests MAY fail, in which case the Location MAY return
-   an error when queried.  The Transparency Service MAY include a Retry-
-   After header in the HTTP response to help with polling.
+   an error when queried.
 
    If the client requests (GET) the location when the registration is
    still in progress, the TS MAY return a 302 Found, as in this non-
@@ -382,6 +384,9 @@ Table of Contents
    Content-Type: application/cose
    Content-Length: 0
    Retry-After: <seconds>
+
+   The location MAY be temporary, and the service may not serve a
+   relevant response at this Location after a reasonable delay.
 
    The Transparency Service MAY include a Retry-After header in the HTTP
    response to help with polling.
