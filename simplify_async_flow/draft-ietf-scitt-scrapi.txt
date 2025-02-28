@@ -418,6 +418,25 @@ Table of Contents
    Receipts may be requested through the resource identified in the
    Location header.
 
+   As an example, a successful asynchronous follows the following
+   sequence:
+
+   Initial exchange:
+
+   Client --- POST /entries (Signed Statement) --> TS
+   Client <-- 303 Location: .../entries/tmp123 --- TS
+
+   May happen zero or more times:
+
+   Client --- GET .../entries/tmp123           --> TS
+   Client <-- 302 Location: .../entries/tmp123 --- TS
+
+   Finally:
+
+   Client --- GET .../entries/tmp123           --> TS
+   Client <-- 200 (Transparent Statement)      --- TS
+              Location: .../entries/final123
+
 2.1.3.3.  Status 400 - Invalid Client Request
 
    The following expected errors are defined.  Implementations MAY
