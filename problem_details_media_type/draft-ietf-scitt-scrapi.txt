@@ -5,8 +5,8 @@
 SCITT                                                        H. Birkholz
 Internet-Draft                                            Fraunhofer SIT
 Intended status: Standards Track                               J. Geater
-Expires: 25 December 2025                                DataTrails Inc.
-                                                            23 June 2025
+Expires: 26 December 2025                                DataTrails Inc.
+                                                            24 June 2025
 
 
                           SCITT Reference APIs
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 December 2025.
+   This Internet-Draft will expire on 26 December 2025.
 
 Copyright Notice
 
@@ -188,7 +188,7 @@ Table of Contents
 
    NOTE: SCRAPI is not a CoAP API.  Nonetheless Constrained Problem
    Details objects [RFC9290] provide a useful CBOR encoding for problem
-   details and avoids the need for mixing CBOR and JSON in endpoint and
+   details and avoids the need for mixing CBOR and JSON in endpoint or
    client implementations.
 
    NOTE: Examples use '\' line wrapping per [RFC8792]
