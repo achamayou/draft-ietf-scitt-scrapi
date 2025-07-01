@@ -5,8 +5,8 @@
 SCITT                                                        H. Birkholz
 Internet-Draft                                            Fraunhofer SIT
 Intended status: Standards Track                               J. Geater
-Expires: 19 December 2025                                DataTrails Inc.
-                                                            17 June 2025
+Expires: 2 January 2026                                  DataTrails Inc.
+                                                             1 July 2025
 
 
                           SCITT Reference APIs
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 December 2025.
+   This Internet-Draft will expire on 2 January 2026.
 
 Copyright Notice
 
@@ -175,7 +175,8 @@ Table of Contents
        or
 
    2.  an HTTP 4xx or 5xx status code, and the body SHOULD be a Concise
-       Problem Details object [RFC9290] containing:
+       Problem Details object (application/concise-problem-details+cbor)
+       [RFC9290] containing:
 
    *  title: A human-readable string identifying the error that
       prevented the Transparency Service from processing the request,
@@ -185,14 +186,10 @@ Table of Contents
       depth, ideally with sufficient detail enabling the error to be
       rectified.
 
-   TODO: RESOLVE this dangling media-type
-
-   application/concise-problem-details+cbor
-
    NOTE: SCRAPI is not a CoAP API.  Nonetheless Constrained Problem
    Details objects [RFC9290] provide a useful CBOR encoding for problem
-   details and avoids the need for mixing CBOR and JSON in endpoint
-   implementations.
+   details and avoids the need for mixing CBOR and JSON in endpoint or
+   client implementations.
 
    NOTE: Examples use '\' line wrapping per [RFC8792]
 
@@ -262,8 +259,6 @@ Table of Contents
 
 2.1.2.  Register Signed Statement
 
-   See notes on detached payloads below.
-
    This endpoint instructs a Transparency Service to register a Signed
    Statement on its log.  Since log implementations may take many
    seconds or longer to reach finality, this API provides an
@@ -283,18 +278,23 @@ Table of Contents
 
    Body (in CBOR diagnostic notation)
 
-   18([                            / COSE Sign1         /
-     h'a1013822',                  / Protected Header   /
-     {},                           / Unprotected Header /
-     null,                         / Detached Payload   /
-     h'269cd68f4211dffc...0dcb29c' / Signature          /
+   18([                            / COSE Sign1                                           /
+     <<{
+       / signature alg         / 1:  -35, # ES384
+       / key identifier        / 4:   h'75726e3a...32636573',
+       / cose sign1 type       / 16:  "application/example+cose",
+       / payload-hash-alg      / 258: -16, # sha-256
+       / preimage-content-type / 259: "application/spdx+json",
+       / payload-location      / 260: "https://.../manifest.json"
+     }>>,                          / Protected Header                                     /
+     {},                           / Unprotected Header                                   /
+     h'935b5a91...e18a588a',       / Payload, sha-256 digest of file stored at Location   /
+     h'269cd68f4211dffc...0dcb29c' / Signature                                            /
    ])
 
-   If the payload is detached, the Transparency Service depends on the
-   client's authentication context in the Registration Policy.  If the
-   payload is attached, the Transparency Service depends on both the
-   client's authentication context (if present) and the verification of
-   the Signed Statement in the Registration Policy.
+   A Transparency Service depends on both the client's authentication
+   context (if present) and the verification of the Signed Statement in
+   the Registration Policy.
 
    The Registration Policy for the Transparency Service MUST be applied
    before any additional processing.  The details of Registration
@@ -319,11 +319,29 @@ Table of Contents
 
    Body (in CBOR diagnostic notation)
 
-   18([                            / COSE Sign1         /
-     h'a1013822',                  / Protected Header   /
-     {},                           / Unprotected Header /
-     null,                         / Detached Payload   /
-     h'269cd68f4211dffc...0dcb29c' / Signature          /
+   / cose-sign1 / 18([
+     / protected   / <<{
+       / key / 4 : "mxA4KiOkQFZ-dkLebSo3mLOEPR7rN8XtxkJe45xuyJk",
+       / algorithm / 1 : -7,  # ES256
+       / vds       / 395 : 1, # RFC9162 SHA-256
+       / claims / 15 : {
+         / issuer  / 1 : "https://blue.notary.example",
+         / subject / 2 : "https://green.software.example/cli@v1.2.3",
+       },
+     }>>,
+     / unprotected / {
+       / proofs / 396 : {
+         / inclusion / -1 : [
+           <<[
+             / size / 9, / leaf / 8,
+             / inclusion path /
+             h'7558a95f...e02e35d6'
+           ]>>
+         ],
+       },
+     },
+     / payload     / null,
+     / signature   / h'02d227ed...ccd3774f'
    ])
 
    The response contains the Receipt for the Signed Statement.  Fresh
@@ -401,11 +419,29 @@ Table of Contents
 
    Body (in CBOR diagnostic notation)
 
-   18([                            / COSE Sign1         /
-     h'a1013822',                  / Protected Header   /
-     {},                           / Unprotected Header /
-     null,                         / Detached Payload   /
-     h'269cd68f4211dffc...0dcb29c' / Signature          /
+   / cose-sign1 / 18([
+     / protected   / <<{
+       / key / 4 : "mxA4KiOkQFZ-dkLebSo3mLOEPR7rN8XtxkJe45xuyJk",
+       / algorithm / 1 : -7,  # ES256
+       / vds       / 395 : 1, # RFC9162 SHA-256
+       / claims / 15 : {
+         / issuer  / 1 : "https://blue.notary.example",
+         / subject / 2 : "https://green.software.example/cli@v1.2.3",
+       },
+     }>>,
+     / unprotected / {
+       / proofs / 396 : {
+         / inclusion / -1 : [
+           <<[
+             / size / 9, / leaf / 8,
+             / inclusion path /
+             h'7558a95f...e02e35d6'
+           ]>>
+         ],
+       },
+     },
+     / payload     / null,
+     / signature   / h'02d227ed...ccd3774f'
    ])
 
    The response contains the Receipt for the Signed Statement.  Fresh
@@ -463,19 +499,7 @@ Table of Contents
      / title /         -1: \
              "Payload Missing",
      / detail /        -2: \
-             "Signed Statement payload must be attached \
-             (must be present)"
-   }
-
-   HTTP/1.1 400 Bad Request
-   Content-Type: application/concise-problem-details+cbor
-
-   {
-     / title /         -1: \
-             "Payload Forbidden",
-     / detail /        -2: \
-             "Signed Statement payload must be detached \
-             (must not be present)"
+             "Signed Statement payload must be present"
    }
 
    HTTP/1.1 400 Bad Request
@@ -750,11 +774,30 @@ Table of Contents
 
    Body (in CBOR diagnostic notation)
 
-   18([                            / COSE Sign1         /
-     h'a1013822',                  / Protected Header   /
-     {},                           / Unprotected Header /
-     null,                         / Detached Payload   /
-     h'269cd68f4211dffc...0dcb29c' / Signature          /
+   / cose-sign1 / 18([
+     / protected   / <<{
+       / key / 4 : "mxA4KiOkQFZ-dkLebSo3mLOEPR7rN8XtxkJe45xuyJk",
+       / algorithm / 1 : -7,  # ES256
+       / vds       / 395 : 1, # RFC9162 SHA-256
+       / claims / 15 : {
+         / issuer  / 1 : "https://blue.notary.example",
+         / subject / 2 : "https://green.software.example/cli@v1.2.3",
+         / iat     / 6 : 1750683311 # Pre-refresh
+       },
+     }>>,
+     / unprotected / {
+       / proofs / 396 : {
+         / inclusion / -1 : [
+           <<[
+             / size / 9, / leaf / 8,
+             / inclusion path /
+             h'7558a95f...e02e35d6'
+           ]>>
+         ],
+       },
+     },
+     / payload     / null,
+     / signature   / h'02d227ed...ccd3774f'
    ])
 
 2.2.3.1.  Status 200
@@ -767,11 +810,30 @@ Table of Contents
 
    Body (in CBOR diagnostic notation)
 
-   18([                            / COSE Sign1         /
-     h'a1013822',                  / Protected Header   /
-     {},                           / Unprotected Header /
-     null,                         / Detached Payload   /
-     h'269cd68f4211dffc...0dcb29c' / Signature          /
+   / cose-sign1 / 18([
+     / protected   / <<{
+       / key / 4 : "mxA4KiOkQFZ-dkLebSo3mLOEPR7rN8XtxkJe45xuyJk",
+       / algorithm / 1 : -7,  # ES256
+       / vds       / 395 : 1, # RFC9162 SHA-256
+       / claims / 15 : {
+         / issuer  / 1 : "https://blue.notary.example",
+         / subject / 2 : "https://green.software.example/cli@v1.2.3",
+         / iat     / 6 : 1750683573 # Post-refresh
+       },
+     }>>,
+     / unprotected / {
+       / proofs / 396 : {
+         / inclusion / -1 : [
+           <<[
+             / size / 9, / leaf / 8,
+             / inclusion path /
+             h'7558a95f...e02e35d6'
+           ]>>
+         ],
+       },
+     },
+     / payload     / null,
+     / signature   / h'48f67a8b...b474bb3a'
    ])
 
 2.2.4.  Resolve Issuer
@@ -1037,9 +1099,9 @@ Table of Contents
               Birkholz, H., Delignat-Lavaud, A., Fournet, C., Deshpande,
               Y., and S. Lasker, "An Architecture for Trustworthy and
               Transparent Digital Supply Chains", Work in Progress,
-              Internet-Draft, draft-ietf-scitt-architecture-12, 8 May
+              Internet-Draft, draft-ietf-scitt-architecture-13, 18 June
               2025, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              scitt-architecture-12>.
+              scitt-architecture-13>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,

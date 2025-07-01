@@ -11,11 +11,11 @@
        This document describes a REST API that supports the normative requirements of the SCITT Architecture.
 Optional key discovery and query interfaces are provided to support interoperability with X.509 Certificates, alternative methods commonly used to support public key discovery and Artifact Repositories. 
     " name="description">
-<meta content="xml2rfc 3.28.1" name="generator">
+<meta content="xml2rfc 3.29.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-scitt-scrapi-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.1
+  xml2rfc 3.29.0
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1046,11 +1046,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">SCRAPI</td>
-<td class="right">June 2025</td>
+<td class="right">July 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Birkholz &amp; Geater</td>
-<td class="center">Expires 19 December 2025</td>
+<td class="center">Expires 2 January 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-scitt-scrapi-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-17" class="published">17 June 2025</time>
+<time datetime="2025-07-01" class="published">1 July 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-19">19 December 2025</time></dd>
+<dd class="expires"><time datetime="2026-01-02">2 January 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ Optional key discovery and query interfaces are provided to support interoperabi
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 2 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1353,7 +1353,7 @@ If Authentication is not implemented, rate limiting or other denial of service m
           <p id="section-2-4.1.1">an HTTP 3xx code, indicating to the client additional action they must take to complete the request, such as follow a redirection, or<a href="#section-2-4.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-2-4.2">
-          <p id="section-2-4.2.1">an HTTP 4xx or 5xx status code, and the body <span class="bcp14">SHOULD</span> be a Concise Problem Details object <span>[<a href="#RFC9290" class="cite xref">RFC9290</a>]</span> containing:<a href="#section-2-4.2.1" class="pilcrow">¶</a></p>
+          <p id="section-2-4.2.1">an HTTP 4xx or 5xx status code, and the body <span class="bcp14">SHOULD</span> be a Concise Problem Details object (application/concise-problem-details+cbor) <span>[<a href="#RFC9290" class="cite xref">RFC9290</a>]</span> containing:<a href="#section-2-4.2.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
 <ul class="normal">
@@ -1364,13 +1364,11 @@ If Authentication is not implemented, rate limiting or other denial of service m
           <p id="section-2-5.2.1">detail: A human-readable string describing the error in more depth, ideally with sufficient detail enabling the error to be rectified.<a href="#section-2-5.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-6">TODO: RESOLVE this dangling media-type<a href="#section-2-6" class="pilcrow">¶</a></p>
-<p id="section-2-7">application/concise-problem-details+cbor<a href="#section-2-7" class="pilcrow">¶</a></p>
-<p id="section-2-8">NOTE: SCRAPI is not a CoAP API.
-Nonetheless Constrained Problem Details objects <span>[<a href="#RFC9290" class="cite xref">RFC9290</a>]</span> provide a useful CBOR encoding for problem details and avoids the need for mixing CBOR and JSON in endpoint implementations.<a href="#section-2-8" class="pilcrow">¶</a></p>
-<p id="section-2-9">NOTE: Examples use '\' line wrapping per <span>[<a href="#RFC8792" class="cite xref">RFC8792</a>]</span><a href="#section-2-9" class="pilcrow">¶</a></p>
-<p id="section-2-10">Examples of errors may include:<a href="#section-2-10" class="pilcrow">¶</a></p>
-<div class="lang-cbor-diag sourcecode" id="section-2-11">
+<p id="section-2-6">NOTE: SCRAPI is not a CoAP API.
+Nonetheless Constrained Problem Details objects <span>[<a href="#RFC9290" class="cite xref">RFC9290</a>]</span> provide a useful CBOR encoding for problem details and avoids the need for mixing CBOR and JSON in endpoint or client implementations.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-7">NOTE: Examples use '\' line wrapping per <span>[<a href="#RFC8792" class="cite xref">RFC8792</a>]</span><a href="#section-2-7" class="pilcrow">¶</a></p>
+<p id="section-2-8">Examples of errors may include:<a href="#section-2-8" class="pilcrow">¶</a></p>
+<div class="lang-cbor-diag sourcecode" id="section-2-9">
 <pre>
 {
   / title /         -1: \
@@ -1378,16 +1376,16 @@ Nonetheless Constrained Problem Details objects <span>[<a href="#RFC9290" class=
   / detail /        -2: \
             "Signing algorithm 'WalnutDSA' not supported"
 }
-</pre><a href="#section-2-11" class="pilcrow">¶</a>
+</pre><a href="#section-2-9" class="pilcrow">¶</a>
 </div>
-<p id="section-2-12">Most error types are specific to the type of request and are defined in the respective subsections below.
-The one exception is the "malformed" error type, which indicates that the Transparency Service could not parse the client's request because it did not comply with this document:<a href="#section-2-12" class="pilcrow">¶</a></p>
-<p id="section-2-13"><code>
+<p id="section-2-10">Most error types are specific to the type of request and are defined in the respective subsections below.
+The one exception is the "malformed" error type, which indicates that the Transparency Service could not parse the client's request because it did not comply with this document:<a href="#section-2-10" class="pilcrow">¶</a></p>
+<p id="section-2-11"><code>
 Error code: `malformed` (The request could not be parsed)
-</code><a href="#section-2-13" class="pilcrow">¶</a></p>
-<p id="section-2-14">Clients <span class="bcp14">SHOULD</span> treat 500 and 503 HTTP status code responses as transient failures and <span class="bcp14">MAY</span> retry the same request without modification at a later date.<a href="#section-2-14" class="pilcrow">¶</a></p>
-<p id="section-2-15">Note that in the case of any error response, the Transparency Service <span class="bcp14">MAY</span> include a <code>Retry-After</code> header field per <span>[<a href="#RFC9110" class="cite xref">RFC9110</a>]</span> in order to request a minimum time for the client to wait before retrying the request.
-In the absence of this header field, this document does not specify a minimum.<a href="#section-2-15" class="pilcrow">¶</a></p>
+</code><a href="#section-2-11" class="pilcrow">¶</a></p>
+<p id="section-2-12">Clients <span class="bcp14">SHOULD</span> treat 500 and 503 HTTP status code responses as transient failures and <span class="bcp14">MAY</span> retry the same request without modification at a later date.<a href="#section-2-12" class="pilcrow">¶</a></p>
+<p id="section-2-13">Note that in the case of any error response, the Transparency Service <span class="bcp14">MAY</span> include a <code>Retry-After</code> header field per <span>[<a href="#RFC9110" class="cite xref">RFC9110</a>]</span> in order to request a minimum time for the client to wait before retrying the request.
+In the absence of this header field, this document does not specify a minimum.<a href="#section-2-13" class="pilcrow">¶</a></p>
 <div id="sec-mandatory">
 <section id="section-2.1">
         <h3 id="name-mandatory">
@@ -1434,12 +1432,11 @@ Fields that are not understood <span class="bcp14">MUST</span> be ignored.<a hre
           <h4 id="name-register-signed-statement">
 <a href="#section-2.1.2" class="section-number selfRef">2.1.2. </a><a href="#name-register-signed-statement" class="section-name selfRef">Register Signed Statement</a>
           </h4>
-<p id="section-2.1.2-1">See notes on detached payloads below.<a href="#section-2.1.2-1" class="pilcrow">¶</a></p>
-<p id="section-2.1.2-2">This endpoint instructs a Transparency Service to register a Signed Statement on its log.
-Since log implementations may take many seconds or longer to reach finality, this API provides an asynchronous mode that returns a locator that can be used to check the registration's status asynchronously.<a href="#section-2.1.2-2" class="pilcrow">¶</a></p>
-<p id="section-2.1.2-3">The following is a non-normative example of an HTTP request to register a Signed Statement:<a href="#section-2.1.2-3" class="pilcrow">¶</a></p>
-<p id="section-2.1.2-4">Request:<a href="#section-2.1.2-4" class="pilcrow">¶</a></p>
-<div class="lang-http sourcecode" id="section-2.1.2-5">
+<p id="section-2.1.2-1">This endpoint instructs a Transparency Service to register a Signed Statement on its log.
+Since log implementations may take many seconds or longer to reach finality, this API provides an asynchronous mode that returns a locator that can be used to check the registration's status asynchronously.<a href="#section-2.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.2-2">The following is a non-normative example of an HTTP request to register a Signed Statement:<a href="#section-2.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-2.1.2-3">Request:<a href="#section-2.1.2-3" class="pilcrow">¶</a></p>
+<div class="lang-http sourcecode" id="section-2.1.2-4">
 <pre>
 POST /entries HTTP/1.1
 Host: transparency.example
@@ -1449,20 +1446,26 @@ Content-Type: application/cose
 
 Body (in CBOR diagnostic notation)
 
-18([                            / COSE Sign1         /
-  h'a1013822',                  / Protected Header   /
-  {},                           / Unprotected Header /
-  null,                         / Detached Payload   /
-  h'269cd68f4211dffc...0dcb29c' / Signature          /
+18([                            / COSE Sign1                                           /
+  &lt;&lt;{
+    / signature alg         / 1:  -35, # ES384
+    / key identifier        / 4:   h'75726e3a...32636573',
+    / cose sign1 type       / 16:  "application/example+cose",
+    / payload-hash-alg      / 258: -16, # sha-256
+    / preimage-content-type / 259: "application/spdx+json",
+    / payload-location      / 260: "https://.../manifest.json"
+  }&gt;&gt;,                          / Protected Header                                     /
+  {},                           / Unprotected Header                                   /
+  h'935b5a91...e18a588a',       / Payload, sha-256 digest of file stored at Location   /
+  h'269cd68f4211dffc...0dcb29c' / Signature                                            /
 ])
-</pre><a href="#section-2.1.2-5" class="pilcrow">¶</a>
+</pre><a href="#section-2.1.2-4" class="pilcrow">¶</a>
 </div>
-<p id="section-2.1.2-6">If the <code>payload</code> is detached, the Transparency Service depends on the client's authentication context in the Registration Policy.
-If the <code>payload</code> is attached, the Transparency Service depends on both the client's authentication context (if present) and the verification of the Signed Statement in the Registration Policy.<a href="#section-2.1.2-6" class="pilcrow">¶</a></p>
-<p id="section-2.1.2-7">The Registration Policy for the Transparency Service <span class="bcp14">MUST</span> be applied before any additional processing.
-The details of Registration Policies are out of scope for this document.<a href="#section-2.1.2-7" class="pilcrow">¶</a></p>
-<p id="section-2.1.2-8">Response:<a href="#section-2.1.2-8" class="pilcrow">¶</a></p>
-<p id="section-2.1.2-9">One of the following:<a href="#section-2.1.2-9" class="pilcrow">¶</a></p>
+<p id="section-2.1.2-5">A Transparency Service depends on both the client's authentication context (if present) and the verification of the Signed Statement in the Registration Policy.<a href="#section-2.1.2-5" class="pilcrow">¶</a></p>
+<p id="section-2.1.2-6">The Registration Policy for the Transparency Service <span class="bcp14">MUST</span> be applied before any additional processing.
+The details of Registration Policies are out of scope for this document.<a href="#section-2.1.2-6" class="pilcrow">¶</a></p>
+<p id="section-2.1.2-7">Response:<a href="#section-2.1.2-7" class="pilcrow">¶</a></p>
+<p id="section-2.1.2-8">One of the following:<a href="#section-2.1.2-8" class="pilcrow">¶</a></p>
 <div id="sec-status-201-registration-is-successful">
 <section id="section-2.1.2.1">
             <h5 id="name-status-201-registration-is-">
@@ -1478,11 +1481,29 @@ Content-Type: application/cose
 
 Body (in CBOR diagnostic notation)
 
-18([                            / COSE Sign1         /
-  h'a1013822',                  / Protected Header   /
-  {},                           / Unprotected Header /
-  null,                         / Detached Payload   /
-  h'269cd68f4211dffc...0dcb29c' / Signature          /
+/ cose-sign1 / 18([
+  / protected   / &lt;&lt;{
+    / key / 4 : "mxA4KiOkQFZ-dkLebSo3mLOEPR7rN8XtxkJe45xuyJk",
+    / algorithm / 1 : -7,  # ES256
+    / vds       / 395 : 1, # RFC9162 SHA-256
+    / claims / 15 : {
+      / issuer  / 1 : "https://blue.notary.example",
+      / subject / 2 : "https://green.software.example/cli@v1.2.3",
+    },
+  }&gt;&gt;,
+  / unprotected / {
+    / proofs / 396 : {
+      / inclusion / -1 : [
+        &lt;&lt;[
+          / size / 9, / leaf / 8,
+          / inclusion path /
+          h'7558a95f...e02e35d6'
+        ]&gt;&gt;
+      ],
+    },
+  },
+  / payload     / null,
+  / signature   / h'02d227ed...ccd3774f'
 ])
 </pre><a href="#section-2.1.2.1-3" class="pilcrow">¶</a>
 </div>
@@ -1563,11 +1584,29 @@ Content-Type: application/cose
 
 Body (in CBOR diagnostic notation)
 
-18([                            / COSE Sign1         /
-  h'a1013822',                  / Protected Header   /
-  {},                           / Unprotected Header /
-  null,                         / Detached Payload   /
-  h'269cd68f4211dffc...0dcb29c' / Signature          /
+/ cose-sign1 / 18([
+  / protected   / &lt;&lt;{
+    / key / 4 : "mxA4KiOkQFZ-dkLebSo3mLOEPR7rN8XtxkJe45xuyJk",
+    / algorithm / 1 : -7,  # ES256
+    / vds       / 395 : 1, # RFC9162 SHA-256
+    / claims / 15 : {
+      / issuer  / 1 : "https://blue.notary.example",
+      / subject / 2 : "https://green.software.example/cli@v1.2.3",
+    },
+  }&gt;&gt;,
+  / unprotected / {
+    / proofs / 396 : {
+      / inclusion / -1 : [
+        &lt;&lt;[
+          / size / 9, / leaf / 8,
+          / inclusion path /
+          h'7558a95f...e02e35d6'
+        ]&gt;&gt;
+      ],
+    },
+  },
+  / payload     / null,
+  / signature   / h'02d227ed...ccd3774f'
 ])
 </pre><a href="#section-2.1.3.2-2" class="pilcrow">¶</a>
 </div>
@@ -1637,26 +1676,11 @@ Content-Type: application/concise-problem-details+cbor
   / title /         -1: \
           "Payload Missing",
   / detail /        -2: \
-          "Signed Statement payload must be attached \
-          (must be present)"
+          "Signed Statement payload must be present"
 }
 </pre><a href="#section-2.1.3.3-4" class="pilcrow">¶</a>
 </div>
 <div class="lang-http-message sourcecode" id="section-2.1.3.3-5">
-<pre>
-HTTP/1.1 400 Bad Request
-Content-Type: application/concise-problem-details+cbor
-
-{
-  / title /         -1: \
-          "Payload Forbidden",
-  / detail /        -2: \
-          "Signed Statement payload must be detached \
-          (must not be present)"
-}
-</pre><a href="#section-2.1.3.3-5" class="pilcrow">¶</a>
-</div>
-<div class="lang-http-message sourcecode" id="section-2.1.3.3-6">
 <pre>
 HTTP/1.1 400 Bad Request
 Content-Type: application/concise-problem-details+cbor
@@ -1668,7 +1692,7 @@ Content-Type: application/concise-problem-details+cbor
           "Signed Statement not accepted by the current\
           Registration Policy"
 }
-</pre><a href="#section-2.1.3.3-6" class="pilcrow">¶</a>
+</pre><a href="#section-2.1.3.3-5" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2002,11 +2026,30 @@ Content-Type: application/cose
 
 Body (in CBOR diagnostic notation)
 
-18([                            / COSE Sign1         /
-  h'a1013822',                  / Protected Header   /
-  {},                           / Unprotected Header /
-  null,                         / Detached Payload   /
-  h'269cd68f4211dffc...0dcb29c' / Signature          /
+/ cose-sign1 / 18([
+  / protected   / &lt;&lt;{
+    / key / 4 : "mxA4KiOkQFZ-dkLebSo3mLOEPR7rN8XtxkJe45xuyJk",
+    / algorithm / 1 : -7,  # ES256
+    / vds       / 395 : 1, # RFC9162 SHA-256
+    / claims / 15 : {
+      / issuer  / 1 : "https://blue.notary.example",
+      / subject / 2 : "https://green.software.example/cli@v1.2.3",
+      / iat     / 6 : 1750683311 # Pre-refresh
+    },
+  }&gt;&gt;,
+  / unprotected / {
+    / proofs / 396 : {
+      / inclusion / -1 : [
+        &lt;&lt;[
+          / size / 9, / leaf / 8,
+          / inclusion path /
+          h'7558a95f...e02e35d6'
+        ]&gt;&gt;
+      ],
+    },
+  },
+  / payload     / null,
+  / signature   / h'02d227ed...ccd3774f'
 ])
 </pre><a href="#section-2.2.3-5" class="pilcrow">¶</a>
 </div>
@@ -2024,11 +2067,30 @@ Content-Type: application/cose
 
 Body (in CBOR diagnostic notation)
 
-18([                            / COSE Sign1         /
-  h'a1013822',                  / Protected Header   /
-  {},                           / Unprotected Header /
-  null,                         / Detached Payload   /
-  h'269cd68f4211dffc...0dcb29c' / Signature          /
+/ cose-sign1 / 18([
+  / protected   / &lt;&lt;{
+    / key / 4 : "mxA4KiOkQFZ-dkLebSo3mLOEPR7rN8XtxkJe45xuyJk",
+    / algorithm / 1 : -7,  # ES256
+    / vds       / 395 : 1, # RFC9162 SHA-256
+    / claims / 15 : {
+      / issuer  / 1 : "https://blue.notary.example",
+      / subject / 2 : "https://green.software.example/cli@v1.2.3",
+      / iat     / 6 : 1750683573 # Post-refresh
+    },
+  }&gt;&gt;,
+  / unprotected / {
+    / proofs / 396 : {
+      / inclusion / -1 : [
+        &lt;&lt;[
+          / size / 9, / leaf / 8,
+          / inclusion path /
+          h'7558a95f...e02e35d6'
+        ]&gt;&gt;
+      ],
+    },
+  },
+  / payload     / null,
+  / signature   / h'48f67a8b...b474bb3a'
 ])
 </pre><a href="#section-2.2.3.1-2" class="pilcrow">¶</a>
 </div>
@@ -2368,7 +2430,7 @@ Related information: N/A<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 <dl class="references">
 <dt id="I-D.draft-ietf-scitt-architecture">[I-D.draft-ietf-scitt-architecture]</dt>
         <dd>
-<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Delignat-Lavaud, A.</span>, <span class="refAuthor">Fournet, C.</span>, <span class="refAuthor">Deshpande, Y.</span>, and <span class="refAuthor">S. Lasker</span>, <span class="refTitle">"An Architecture for Trustworthy and Transparent Digital Supply Chains"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-scitt-architecture-12</span>, <time datetime="2025-05-08" class="refDate">8 May 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-scitt-architecture-12">https://datatracker.ietf.org/doc/html/draft-ietf-scitt-architecture-12</a>&gt;</span>. </dd>
+<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Delignat-Lavaud, A.</span>, <span class="refAuthor">Fournet, C.</span>, <span class="refAuthor">Deshpande, Y.</span>, and <span class="refAuthor">S. Lasker</span>, <span class="refTitle">"An Architecture for Trustworthy and Transparent Digital Supply Chains"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-scitt-architecture-13</span>, <time datetime="2025-06-18" class="refDate">18 June 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-scitt-architecture-13">https://datatracker.ietf.org/doc/html/draft-ietf-scitt-architecture-13</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
