@@ -453,17 +453,19 @@ Body (in CBOR diagnostic notation)
 The response contains the Receipt for the Signed Statement.
 Fresh Receipts may be requested through the resource identified in the Location header.
 
-### Status 303 - Registration is running
+### Status 202 - Registration is running
 
 In cases where the registration request is accepted but the Transparency Service is not able to produce a Receipt in a reasonable time, it MAY return a locator for the registration operation, as in this non-normative example:
 
 ~~~ http
-HTTP/1.1 303 See Other
+HTTP/1.1 202 Accepted
 Location: https://transparency.example/entries/67ed...befe
 Content-Type: application/cose
 Content-Length: 0
 Retry-After: <seconds>
 ~~~
+
+The `Location` header field points to a status monitor resource for the running registration operation, which the client can poll as described in {{sec-query-registration-status}}.
 
 The location MAY be temporary, and the server might remove the resource after a reasonable delay.
 
@@ -544,7 +546,7 @@ Content-Type: application/concise-problem-details+cbor
 
 ## Query Registration Status
 
-This resource lets a client query a Transparency Service for the registration status of a Signed Statement they have submitted earlier, and for which they have received a 303 or 302 - Registration is running response.
+This resource lets a client query a Transparency Service for the registration status of a Signed Statement they have submitted earlier, and for which they have received a 202 - Registration is running response.
 
 Request:
 
@@ -560,14 +562,14 @@ Response:
 
 One of the following:
 
-### Status 302 - Registration is running
+### Status 202 - Registration is running
 
 Registration requests may fail, in which case the Location MAY return an error when queried.
 
-If the client requests (GET) the location when the registration is still in progress, the TS MAY return a 302 Found, as in this non-normative example:
+If the client requests (GET) the location when the registration is still in progress, the TS MAY return a 202 Accepted, as in this non-normative example:
 
 ~~~ http-message
-HTTP/1.1 302 Found
+HTTP/1.1 202 Accepted
 Location: https://transparency.example/entries/67ed...befe
 Content-Type: application/cose
 Content-Length: 0
@@ -624,12 +626,12 @@ As an example, a successful asynchronous follows the following sequence:
 Initial exchange:
 
 Client --- POST /entries (Signed Statement) --> TS
-Client <-- 303 Location: .../entries/tmp123 --- TS
+Client <-- 202 Location: .../entries/tmp123 --- TS
 
 May happen zero or more times:
 
 Client --- GET .../entries/tmp123           --> TS
-Client <-- 302 Location: .../entries/tmp123 --- TS
+Client <-- 202 Location: .../entries/tmp123 --- TS
 
 Finally:
 
